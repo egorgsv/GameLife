@@ -6,18 +6,29 @@ using System.Threading.Tasks;
 
 namespace GameLife
 {
+    //Cell – хранит свои координаты, свой тип(занята или свободна), 
+    //подсчитывает действие(появится или исчезнуть), хранит для этого ссылки на 8 соседей.
     public class Cell //клетка поля
     {
         public enum CellSlate { Dead, Alive };
 
         public CellSlate Slate;
 
-        public Cell(CellSlate slate) //конструктор
+        //ссылки на соседей
+        public Cell[] cellNeigh = new Cell[8];
+
+        //координаты
+        public int x;
+        public int y;
+        
+        //конструктор
+        public Cell(int x, int y, CellSlate slate = CellSlate.Dead) 
         {
+            this.x = x;
+            this.y = y;
             Slate = slate;
         }
 
-        public Cell() { }
 
         //делаем шаг
         public void MakeTurn(int aliveNeighCount)
@@ -28,14 +39,6 @@ namespace GameLife
                 Slate = CellSlate.Alive;
             }
 
-            if (Slate == CellSlate.Alive && (aliveNeighCount > 3 || aliveNeighCount < 2))
-            {
-                Slate = CellSlate.Dead;
-            }
-        }
-
-        public void MakeTurnDead(int aliveNeighCount)
-        {
             if (Slate == CellSlate.Alive && (aliveNeighCount > 3 || aliveNeighCount < 2))
             {
                 Slate = CellSlate.Dead;
@@ -56,14 +59,6 @@ namespace GameLife
             }
 
             return aliveNeighCount;
-        }
-
-        //соседи
-        public Cell[] cellNeigh = new Cell[8];
-
-        public void SetArrayNeigh(Cell[] array)
-        {
-            array.CopyTo(cellNeigh, 0);
         }
     }
 

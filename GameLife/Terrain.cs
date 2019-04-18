@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace GameLife
 {
+    //Terrain хранит матрицу Cell, делает ход(переадресуя действия всем Cell,
+    //а потом снабжает каждую из них соседями), рисует каждую Cell. Сам себя рисует, а потом действует декоратор
     public class Terrain //поле
     {
         public static int N = 50;
@@ -21,7 +25,7 @@ namespace GameLife
             {
                 for (int j = 0; j < N + 2; j++)
                 {
-                    field[i, j] = new Cell();
+                    field[i, j] = new Cell(i, j);
                 }
             }
         }
@@ -54,7 +58,7 @@ namespace GameLife
                         }
                     }
 
-                    field[i, j].SetArrayNeigh(cellNeigh);
+                    field[i, j].cellNeigh = cellNeigh;
                 }
             }
         }
@@ -114,20 +118,27 @@ namespace GameLife
             }
         }
 
-        public void MakeTurnDead()
+        public Image Draw(PictureBox pictureBox)
         {
-            //подсчёт соседей
-            int[,] aliveNeighCount = new int[N + 2, N + 2];
-            AliveNeighCount(ref aliveNeighCount);
+            float diam = pictureBox.Width / Terrain.N;
+            // Create solid brush.
+            SolidBrush orangeBrush = new SolidBrush(Color.DarkOrange);
+            Bitmap bmp = new Bitmap(pictureBox.Height, pictureBox.Width);
+            Graphics g = Graphics.FromImage(bmp);
+            Pen penOrange = new Pen(Color.DarkOrange);
 
-            //шаг игры
-            for (int i = 1; i < N + 1; i++)
+            for (int i = 1; i < Terrain.N + 1; i++)
             {
-                for (int j = 1; j < N + 1; j++)
+                for (int j = 1; j < Terrain.N + 1; j++)
                 {
-                    field[i, j].MakeTurnDead(aliveNeighCount[i, j]);
+                    if (field[i, j].Slate == Cell.CellSlate.Alive)
+                    {
+                        g.FillEllipse(orangeBrush, (i + 0.1f - 1) * diam, (j + 0.1f - 1) * diam, diam * 0.8f, diam * 0.8f);
+                    }
                 }
             }
+
+            return pictureBox.Image = bmp;
         }
 
     }
