@@ -12,34 +12,30 @@ namespace GameLife
     //рисуя клетки после Terrain.Draw(). 
     //рисование сетки
     //удалить при смене галочки
-    class FramedCellsTerrainDecorator
+    class FramedCellsTerrainDecorator : TerrainDecorator
     {
-        protected Terrain terrain;
+        public FramedCellsTerrainDecorator(Terrain terrain) : base(terrain) { }
 
-        public void SetTerrain(Terrain t)
+        public Image Draw(Image image)
         {
-            terrain = t;
-        }
-
-        public void Draw(PictureBox pictureBox)
-        {
-            float diam = pictureBox.Width / Terrain.N;
-            Bitmap bmp = new Bitmap(pictureBox.Height, pictureBox.Width);
-            Graphics g = Graphics.FromImage(bmp);
+            float diam = image.Width / N;
+            Graphics g = Graphics.FromImage(image);
 
             if (terrain != null)
             {
                 Pen pen = new Pen(Color.LightGray);
                 for (int i = 1; i < Terrain.N + 1; i++)
                 {
-                    g.DrawLine(pen, 0, i * diam, pictureBox.Height, i * diam); //горизонтальные
-                    g.DrawLine(pen, i * diam, 0, i * diam, pictureBox.Width); //вертикальные
+                    g.DrawLine(pen, 0, i * diam, image.Height, i * diam); //горизонтальные
+                    g.DrawLine(pen, i * diam, 0, i * diam, image.Width); //вертикальные
                 }
 
-                terrain.Draw(pictureBox); //рисует инфузории
+                terrain.Draw(image); //рисует инфузории
             }
+
+            return image;
         }
 
-        
+
     }
 }

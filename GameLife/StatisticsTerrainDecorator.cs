@@ -10,14 +10,9 @@ namespace GameLife
     //StatisticsTerrainDecorator – будет декоратором для Terrain 
     //и оборачивает его метод MakeTurn(), замеряя время до и 
     //после вызова этого метода, также собирая другую статистику.
-    class StatisticsTerrainDecorator : Terrain
+    class StatisticsTerrainDecorator : TerrainDecorator
     {
-        protected Terrain terrain;
-
-        public void SetTerrain(Terrain t)
-        {
-            terrain = t;
-        }
+        public StatisticsTerrainDecorator(Terrain terrain) : base(terrain) { }
 
         public void MakeTurn()
         {
@@ -34,13 +29,12 @@ namespace GameLife
             double percent = 0;
             if (prevAliveCount != 0)
             {
-                percent = Math.Round((double)(terrain.AliveCount() - prevAliveCount) / (double)prevAliveCount * 10000) / 100;
+                percent = Math.Round((double) (currentAliveCount - prevAliveCount) / (double) prevAliveCount * 10000) / 100;
             }
 
             //вывод статистики в форму
-            Statistics.Text = "Количество инфузорий: " + currentAliveCount + "\n" +
+            string statistics = "Количество инфузорий: " + currentAliveCount + "\n" +
                 "Процент изменения: " + percent + "\n" + "Время хода: " + sw.Elapsed.TotalMilliseconds;
-                //"ms \nВремя сканирования: " + swScan.Elapsed.TotalMilliseconds + "ms";
         }
 
         

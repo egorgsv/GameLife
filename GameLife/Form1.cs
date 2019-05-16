@@ -16,16 +16,12 @@ namespace GameLife
     {
         public bool stopped = false; //АСТАНАВИТЕСЬ!!!!!
         public bool drawGrid = false; //рисовать ли сетку
-        Terrain terrain = new Terrain(); 
-        //terrain = new StatisticsTerrainDecorator();
-
-        // Create solid brush.
-        SolidBrush orangeBrush = new SolidBrush(Color.DarkOrange);
+        Terrain terrain = new Terrain();
 
         public Form1()
         {
             InitializeComponent();
-            timer1.Interval = 200; //интервал таймера в мс
+            timer1.Interval = 100; //интервал таймера в мс
             timer1.Enabled = false;
         }
 
@@ -33,8 +29,11 @@ namespace GameLife
         private void buttonStart_Click(object sender, EventArgs e)
         {
             buttonStart.Text = "Restart";
-            terrain.Start();
             timer1.Enabled = true;
+            terrain = new StatisticsTerrainDecorator(terrain);
+
+            terrain.Start();
+            
         }
 
         //АСТАНАВИТЕСЬ!!!!!
@@ -48,60 +47,25 @@ namespace GameLife
         //ТИК-ТАК-ТИК-ТАК-ТИК-ТАК
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (drawGrid) //рисуем сетку
-            {
-                //terrain = new FramedCellsTerrainDecorator();
-            }
+            Bitmap bmp = new Bitmap(pictureBox1.Height, pictureBox1.Width);
 
             //АСТАНАВИТЕСЬ!!!!!
             if (!stopped) 
             {
-                pictureBox1.Image = terrain.Draw(pictureBox1);
+                pictureBox1.Image = terrain.Draw(bmp);
+                terrain.MakeTurn(); 
+                //Statistics.Text
             } 
         }
 
-        public void Scanner(Cell.CellSlate[,] PrevField)
-        {
-            Terrain terrainScan = new Terrain();
-            terrainScan.Start();
 
-            for (int i = 1; i < Terrain.N + 1; i++)
-            {
-                for (int j = 1; j < Terrain.N + 1; j++)
-                {
-                    terrainScan.field[i, j].Slate = PrevField[i, j];
-                }
-            }
-
-            for (int i = 1; i < Terrain.N + 1; i++)
-            {
-                for (int j = 1; j < Terrain.N + 1; j++)
-                {
-                    if (terrainScan.field[i, j].Slate == terrain.field[i, j].Slate && terrain.field[i, j].Slate == Cell.CellSlate.Alive)
-                    {
-                        int count = 0;
-                        for (int f = 0; f < 8; f++)
-                        {
-                            if (terrainScan.field[i, j].cellNeigh[f].Slate == terrain.field[i, j].cellNeigh[f].Slate)
-                            {
-                                count++;
-                            }
-                        }
-
-                        if (count == 8) { terrainScan.field[i, j].Slate = Cell.CellSlate.Alive; }
-                        else { terrainScan.field[i, j].Slate = Cell.CellSlate.Dead; }
-                    }
-
-                }
-            }
-
-            pictureBox2.Image = bmpScan;
-        }
+        
 
         //рисовать сетку????
         private void checkBoxDraw_CheckedChanged(object sender, EventArgs e)
         {
             drawGrid = !drawGrid;
+            //terrain = new FramedCellsTerrainDecorator(terrain);
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)

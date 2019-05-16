@@ -9,10 +9,10 @@ using System.Windows.Forms;
 namespace GameLife
 {
     //Terrain хранит матрицу Cell, делает ход(переадресуя действия всем Cell,
-    //а потом снабжает каждую из них соседями), рисует каждую Cell. Сам себя рисует, а потом действует декоратор
-    public class Terrain //поле
+    //а потом снабжает каждую из них соседями), рисует каждую Cell. 
+    public class Terrain//поле
     {
-        public static int N = 50;
+        public static int N = 30;
 
         public Cell[,] field = new Cell[N + 2, N + 2];
 
@@ -39,9 +39,9 @@ namespace GameLife
                 for (int j = 1; j < N + 1; j++)
                 {
                     //рандомно выбираем состояние клетки 
-                    int randomNumber = random.Next(0, 1000);
+                    int randomNumber = random.Next(0, 999);
 
-                    field[i, j].Slate = randomNumber % 2 == 0 ? Cell.CellSlate.Alive : Cell.CellSlate.Dead;
+                    field[i, j].Slate = randomNumber % 5 == 0 ? Cell.CellSlate.Alive : Cell.CellSlate.Dead;
 
                     Cell[] cellNeigh = new Cell[8]; //массив соседей
 
@@ -59,6 +59,25 @@ namespace GameLife
                     }
 
                     field[i, j].cellNeigh = cellNeigh;
+                }
+            }
+        }
+
+        //шаг игры
+        public void MakeTurn()
+        {
+            aliveCountPrev = this.AliveCount();
+
+            //подсчёт соседей
+            int[,] aliveNeighCount = new int[N + 2, N + 2];
+            AliveNeighCount(ref aliveNeighCount);
+
+            //шаг игры
+            for (int i = 1; i < N + 1; i++)
+            {
+                for (int j = 1; j < N + 1; j++)
+                {
+                    field[i, j].MakeTurn(aliveNeighCount[i, j]);
                 }
             }
         }
@@ -99,37 +118,18 @@ namespace GameLife
             }
         }
 
-        //шаг игры
-        public void MakeTurn()
+        
+        //поле рисует само себя
+        public Image Draw(Image image)
         {
-            aliveCountPrev = this.AliveCount();
+            float diam = image.Height / N;
+            // Create solid brush.
+            SolidBrush orangeBrush = new SolidBrush(Color.DarkOrange);
+            Graphics g = Graphics.FromImage(image);
 
-            //подсчёт соседей
-            int[,] aliveNeighCount = new int[N + 2, N + 2];
-            AliveNeighCount(ref aliveNeighCount);
-
-            //шаг игры
             for (int i = 1; i < N + 1; i++)
             {
                 for (int j = 1; j < N + 1; j++)
-                {
-                    field[i, j].MakeTurn(aliveNeighCount[i, j]);
-                }
-            }
-        }
-
-        public Image Draw(PictureBox pictureBox)
-        {
-            float diam = pictureBox.Width / Terrain.N;
-            // Create solid brush.
-            SolidBrush orangeBrush = new SolidBrush(Color.DarkOrange);
-            Bitmap bmp = new Bitmap(pictureBox.Height, pictureBox.Width);
-            Graphics g = Graphics.FromImage(bmp);
-            Pen penOrange = new Pen(Color.DarkOrange);
-
-            for (int i = 1; i < Terrain.N + 1; i++)
-            {
-                for (int j = 1; j < Terrain.N + 1; j++)
                 {
                     if (field[i, j].Slate == Cell.CellSlate.Alive)
                     {
@@ -137,8 +137,7 @@ namespace GameLife
                     }
                 }
             }
-
-            return pictureBox.Image = bmp;
+            return image;
         }
 
     }
