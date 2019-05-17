@@ -12,9 +12,13 @@ namespace GameLife
     //рисуя клетки после Terrain.Draw(). 
     //рисование сетки
     //удалить при смене галочки
-    class FramedCellsTerrainDecorator : TerrainDecorator
+    class FramedCellsTerrainDecorator : Terrain
     {
-        public FramedCellsTerrainDecorator(Terrain terrain) : base(terrain) { }
+        protected Terrain terrain;
+        public FramedCellsTerrainDecorator(Terrain terrain) 
+        {
+            this.terrain = terrain;
+        }
 
         public Image Draw(Image image)
         {
@@ -30,12 +34,21 @@ namespace GameLife
                     g.DrawLine(pen, i * diam, 0, i * diam, image.Width); //вертикальные
                 }
 
-                terrain.Draw(image); //рисует инфузории
+                image = terrain.Draw(image); //рисует инфузории
             }
 
             return image;
         }
 
+        public override void Start()
+        {
+            terrain.Start();
+        }
 
-    }
+        public override void MakeTurn()
+        {
+            terrain.MakeTurn();
+        }
+
+        }
 }

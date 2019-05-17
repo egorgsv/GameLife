@@ -31,7 +31,7 @@ namespace GameLife
         }
 
         //начало игры
-        public void Start()
+        public virtual void Start()
         {
             Random random = new Random();
             for (int i = 1; i < N + 1; i++)
@@ -64,7 +64,7 @@ namespace GameLife
         }
 
         //шаг игры
-        public void MakeTurn()
+        public virtual void MakeTurn()
         {
             aliveCountPrev = this.AliveCount();
 
@@ -120,7 +120,7 @@ namespace GameLife
 
         
         //поле рисует само себя
-        public Image Draw(Image image)
+        public virtual Image Draw(Image image)
         {
             float diam = image.Height / N;
             // Create solid brush.

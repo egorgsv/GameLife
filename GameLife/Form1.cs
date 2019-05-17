@@ -16,13 +16,15 @@ namespace GameLife
     {
         public bool stopped = false; //АСТАНАВИТЕСЬ!!!!!
         public bool drawGrid = false; //рисовать ли сетку
-        Terrain terrain = new Terrain();
+        Terrain terrain = new StatisticsTerrainDecorator(new Terrain());
+        
 
         public Form1()
         {
             InitializeComponent();
             timer1.Interval = 100; //интервал таймера в мс
             timer1.Enabled = false;
+            //terrain = new FramedCellsTerrainDecorator(terrain);
         }
 
         //ПОЕХАЛИ!
@@ -30,10 +32,7 @@ namespace GameLife
         {
             buttonStart.Text = "Restart";
             timer1.Enabled = true;
-            terrain = new StatisticsTerrainDecorator(terrain);
-
             terrain.Start();
-            
         }
 
         //АСТАНАВИТЕСЬ!!!!!
@@ -53,8 +52,15 @@ namespace GameLife
             if (!stopped) 
             {
                 pictureBox1.Image = terrain.Draw(bmp);
-                terrain.MakeTurn(); 
-                //Statistics.Text
+                terrain.MakeTurn();
+
+                if (terrain is StatisticsTerrainDecorator)
+                {
+                    Statistics.Text = "Количество инфузорий: " + Convert.ToString((terrain as StatisticsTerrainDecorator).stat.currentAliveCount) + "\n" +
+                    "Процент изменения: " + Convert.ToString((terrain as StatisticsTerrainDecorator).stat.percent) + "\n" + 
+                    "Время хода: " + Convert.ToString((terrain as StatisticsTerrainDecorator).stat.time);
+                }
+                
             } 
         }
 

@@ -11,9 +11,13 @@ namespace GameLife
     //ScannerTerrainDecorator будет декоратором для Terrain и оборачивает его метод MakeTurn(),
     //после которого удаляет из массива те Cell, которые не из паттернов и вызывает Terrain.Draw(), 
     //подсунув другой pictureBox1.Image. Он получает его в своем конструкторе.
-    class ScannerTerrainDecorator : TerrainDecorator
+    class ScannerTerrainDecorator : Terrain
     {
-        public ScannerTerrainDecorator(Terrain terrain) : base(terrain) { }
+        protected Terrain terrain;
+        public ScannerTerrainDecorator(Terrain terrain)
+        {
+            this.terrain = terrain;
+        }
 
         public void MakeTurn()
         {

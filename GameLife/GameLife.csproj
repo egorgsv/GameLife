@@ -60,7 +60,6 @@
     <Compile Include="ScannerTerrainDecorator.cs" />
     <Compile Include="StatisticsTerrainDecorator.cs" />
     <Compile Include="Terrain.cs" />
-    <Compile Include="TerrainDecorator.cs" />
     <Compile Include="WhiteCell.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
