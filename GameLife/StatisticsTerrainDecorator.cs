@@ -11,12 +11,13 @@ namespace GameLife
     //StatisticsTerrainDecorator – будет декоратором для Terrain 
     //и оборачивает его метод MakeTurn(), замеряя время до и 
     //после вызова этого метода, также собирая другую статистику.
-    class StatisticsTerrainDecorator : Terrain
+    class StatisticsTerrainDecorator : TerrainDecorator
     {
-        protected Terrain terrain;
+
         public StatisticsTerrainDecorator(Terrain terrain) 
         {
             this.terrain = terrain;
+            field = terrain.field;
         }
 
         public struct Statistics

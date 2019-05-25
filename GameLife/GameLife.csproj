@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="BlackCell.cs" />
     <Compile Include="Cell.cs" />
+    <Compile Include="Decorator.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

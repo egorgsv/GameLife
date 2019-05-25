@@ -8,9 +8,9 @@ namespace GameLife
 {
     class WhiteCell : Cell
     {
-        public WhiteCell(int x, int y, CellSlate slate) : base(x, y, slate)
-        {
+        //public WhiteCell(int x, int y, CellSlate slate) : base(x, y, slate)
+        //{
 
-        }
+        //}
     }
 }

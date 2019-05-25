@@ -12,15 +12,16 @@ namespace GameLife
     //рисуя клетки после Terrain.Draw(). 
     //рисование сетки
     //удалить при смене галочки
-    class FramedCellsTerrainDecorator : Terrain
+    class FramedCellsTerrainDecorator : TerrainDecorator
     {
-        protected Terrain terrain;
+        
         public FramedCellsTerrainDecorator(Terrain terrain) 
         {
             this.terrain = terrain;
+            field = terrain.field;
         }
 
-        public Image Draw(Image image)
+        public override Image Draw(Image image)
         {
             float diam = image.Width / N;
             Graphics g = Graphics.FromImage(image);
@@ -50,5 +51,5 @@ namespace GameLife
             terrain.MakeTurn();
         }
 
-        }
+    }
 }

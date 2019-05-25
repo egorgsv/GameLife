@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace GameLife
 {
-    class Scanner
+    abstract class TerrainDecorator : Terrain
     {
-
+        public Terrain terrain { get; set; }
     }
 }

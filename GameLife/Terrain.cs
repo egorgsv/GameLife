@@ -10,13 +10,11 @@ namespace GameLife
 {
     //Terrain хранит матрицу Cell, делает ход(переадресуя действия всем Cell,
     //а потом снабжает каждую из них соседями), рисует каждую Cell. 
-    public class Terrain//поле
+    public class Terrain : ICloneable//поле
     {
         public static int N = 30;
 
         public Cell[,] field = new Cell[N + 2, N + 2];
-
-        private int aliveCountPrev = 0;
 
         public Terrain() //конструктор
         {
@@ -25,7 +23,7 @@ namespace GameLife
             {
                 for (int j = 0; j < N + 2; j++)
                 {
-                    field[i, j] = new Cell(i, j);
+                    field[i, j] = new Cell();
                 }
             }
         }
@@ -66,8 +64,6 @@ namespace GameLife
         //шаг игры
         public virtual void MakeTurn()
         {
-            aliveCountPrev = this.AliveCount();
-
             //подсчёт соседей
             int[,] aliveNeighCount = new int[N + 2, N + 2];
             AliveNeighCount(ref aliveNeighCount);
@@ -80,12 +76,6 @@ namespace GameLife
                     field[i, j].MakeTurn(aliveNeighCount[i, j]);
                 }
             }
-        }
-
-        //подсчёт количества всех живых клеток на предыдущем шаге
-        public int AliveCountPrev()
-        {
-            return aliveCountPrev;
         }
 
         //подсчёт количества всех живых клеток
@@ -140,6 +130,18 @@ namespace GameLife
             return image;
         }
 
+        public object Clone()
+        {
+            Terrain terrain = new Terrain();
+            for (int i = 1; i < N + 1; i++)
+            {
+                for (int j = 1; j < N + 1; j++)
+                {
+                    terrain.field[i, j] = (Cell) field[i, j].Clone();
+                }
+            }
+            return terrain;
+        }
     }
 
 }

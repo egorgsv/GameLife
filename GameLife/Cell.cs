@@ -8,7 +8,7 @@ namespace GameLife
 {
     //Cell – хранит свои координаты, свой тип(занята или свободна), 
     //подсчитывает действие(появится или исчезнуть), хранит для этого ссылки на 8 соседей.
-    public class Cell //клетка поля
+    public class Cell : ICloneable//клетка поля
     {
         public enum CellSlate { Dead, Alive };
 
@@ -17,15 +17,15 @@ namespace GameLife
         //ссылки на соседей
         public Cell[] cellNeigh = new Cell[8];
 
-        //координаты
-        public int x;
-        public int y;
+        ////координаты
+        //public int x;
+        //public int y;
         
         //конструктор
-        public Cell(int x, int y, CellSlate slate = CellSlate.Dead) 
+        public Cell(/*int x, int y,*/ CellSlate slate = CellSlate.Dead) 
         {
-            this.x = x;
-            this.y = y;
+            //this.x = x;
+            //this.y = y;
             Slate = slate;
         }
 
@@ -52,13 +52,30 @@ namespace GameLife
 
             foreach (var neigh in cellNeigh)
             {
-                if (neigh.Slate == CellSlate.Alive)
+                if (/*neigh != null &&*/ neigh.Slate == CellSlate.Alive)
                 {
                     aliveNeighCount++;
                 }
             }
 
             return aliveNeighCount;
+        }
+
+        public object Clone()
+        {
+            Cell cell = new Cell();
+            cell.cellNeigh = new Cell[cellNeigh.Length];
+            for (int i = 0; i < cellNeigh.Length; i++)
+            {
+                if (cellNeigh[i] != null)
+                {
+                    cell.cellNeigh[i] = new Cell();
+                    cell.cellNeigh[i].Slate = cellNeigh[i].Slate;
+                }
+                
+            }
+            cell.Slate = Slate;
+            return cell;
         }
     }
 
