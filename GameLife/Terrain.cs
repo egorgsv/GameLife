@@ -39,7 +39,7 @@ namespace GameLife
                     //рандомно выбираем состояние клетки 
                     int randomNumber = random.Next(0, 999);
 
-                    field[i, j].Slate = randomNumber % 5 == 0 ? Cell.CellSlate.Alive : Cell.CellSlate.Dead;
+                    field[i, j].Slate = randomNumber % 2 == 0 ? Cell.CellSlate.Alive : Cell.CellSlate.Dead;
 
                     Cell[] cellNeigh = new Cell[8]; //массив соседей
 

@@ -34,7 +34,8 @@ namespace GameLife
                 for (int j = 1; j < N + 1; j++)
                 {
                     if (terrainPrev.field[i, j].Slate == Cell.CellSlate.Alive &&
-                        terrain.field[i, j].AliveNeighCount() == terrainPrev.field[i, j].AliveNeighCount())
+                        terrain.field[i, j].AliveNeighCount() == terrainPrev.field[i, j].AliveNeighCount() 
+                        && terrainPrev.field[i, j].Slate == terrain.field[i, j].Slate)
                     {
                         newterrain.field[i, j].Slate = Cell.CellSlate.Alive;
                     }
@@ -45,13 +46,13 @@ namespace GameLife
                 }
             }
 
-            for (int i = 1; i < N + 1; i++)
-            {
-                for (int j = 1; j < N + 1; j++)
-                {
-                    terrain.field[i, j].Slate = newterrain.field[i, j].Slate;
-                }
-            }
+            //for (int i = 1; i < N + 1; i++)
+            //{
+            //    for (int j = 1; j < N + 1; j++)
+            //    {
+            //        terrain.field[i, j].Slate = newterrain.field[i, j].Slate;
+            //    }
+            //}
 
             //for (int i = 1; i < Terrain.N + 1; i++)
             //{
@@ -80,7 +81,7 @@ namespace GameLife
 
         public override Image Draw(Image image)
         {
-            return terrain.Draw(image);
+            return newterrain.Draw(image);
         }
 
         public override void Start()
