@@ -34,7 +34,8 @@ namespace GameLife
                 for (int j = 1; j < N + 1; j++)
                 {
                     if (terrainPrev.field[i, j].Slate == Cell.CellSlate.Alive &&
-                        terrain.field[i, j].AliveNeighCount() == terrainPrev.field[i, j].AliveNeighCount() 
+                        terrainPrev.field[i, j].Equals(terrain.field[i, j])
+                        //terrain.field[i, j].AliveNeighCount() == terrainPrev.field[i, j].AliveNeighCount() 
                         && terrainPrev.field[i, j].Slate == terrain.field[i, j].Slate)
                     {
                         newterrain.field[i, j].Slate = Cell.CellSlate.Alive;
@@ -50,33 +51,38 @@ namespace GameLife
             //{
             //    for (int j = 1; j < N + 1; j++)
             //    {
-            //        terrain.field[i, j].Slate = newterrain.field[i, j].Slate;
-            //    }
-            //}
-
-            //for (int i = 1; i < Terrain.N + 1; i++)
-            //{
-            //    for (int j = 1; j < Terrain.N + 1; j++)
-            //    {
-
-            //        terrainPrev.field[i, j].Slate = terrain.field[i, j].Slate;
-            //    }
-            //}
-
-            //for (int i = 1; i < Terrain.N + 1; i++)
-            //{
-            //    for (int j = 1; j < Terrain.N + 1; j++)
-            //    {
-            //        if (PrevAliveNeighCount[i, j] == terrain.field[i, j].AliveNeighCount() && terrainPrev.field[i, j].Slate == Cell.CellSlate.Alive)
+            //        if (newterrain.field[i, j].Slate == Cell.CellSlate.Alive && terrain.field[i, j].AliveNeighCount() == 2)
             //        {
-            //            terrainPrev.field[i, j].Slate = Cell.CellSlate.Alive;
-            //        }
-            //        else
-            //        {
-            //            terrainPrev.field[i, j].Slate = Cell.CellSlate.Dead;
+            //            int f = 0;
+            //            for (int k = i - 1; k < i + 2; k++)
+            //            {
+            //                for (int l = j - 1; l < j + 2; l++)
+            //                {
+            //                    if (k != i || l != j)
+            //                    {
+            //                        newterrain.field[k, l].Slate = terrainPrev.field[i, j].cellNeigh[f].Slate;
+            //                        f++;
+            //                    }
+            //                }
+            //            }
             //        }
             //    }
             //}
+
+            newterrain.MakeTurn();
+            //newterrain.MakeTurnDead();
+
+            for (int i = 1; i < N + 1; i++)
+            {
+                for (int j = 1; j < N + 1; j++)
+                {
+                    if (newterrain.field[i, j].Slate == Cell.CellSlate.Alive && 
+                        (newterrain.field[i, j].AliveNeighCount() < 2 || newterrain.field[i, j].AliveNeighCount() > 3))
+                    {
+                        newterrain.field[i, j].Slate = Cell.CellSlate.Dead;
+                    }
+                }
+            }
         }
 
         public override Image Draw(Image image)

@@ -77,6 +77,27 @@ namespace GameLife
             cell.Slate = Slate;
             return cell;
         }
+
+        public bool Equals(Cell cell)
+        {
+            if (AliveNeighCount() != cell.AliveNeighCount()) return false;
+            for (int i = 0; i < 8; i++)
+            {
+                if (cellNeigh[i].Slate != cell.cellNeigh[i].Slate)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        //public void MakeTurnDead(int aliveNeighCount)
+        //{
+        //    if (Slate == CellSlate.Alive && (aliveNeighCount > 3 || aliveNeighCount < 2))
+        //    {
+        //        Slate = CellSlate.Dead;
+        //    }
+        //}
     }
 
 }

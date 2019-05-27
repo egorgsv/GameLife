@@ -37,9 +37,9 @@ namespace GameLife
                 for (int j = 1; j < N + 1; j++)
                 {
                     //рандомно выбираем состояние клетки 
-                    int randomNumber = random.Next(0, 999);
+                    int randomNumber = random.Next(0, 99);
 
-                    field[i, j].Slate = randomNumber % 2 == 0 ? Cell.CellSlate.Alive : Cell.CellSlate.Dead;
+                    field[i, j].Slate = randomNumber % 7 == 0 ? Cell.CellSlate.Alive : Cell.CellSlate.Dead;
 
                     Cell[] cellNeigh = new Cell[8]; //массив соседей
 
@@ -97,7 +97,7 @@ namespace GameLife
         }
 
         //подсчёт соседей
-        private void AliveNeighCount(ref int [,] aliveNeighCount)
+        public void AliveNeighCount(ref int [,] aliveNeighCount)
         {
             for (int i = 1; i < N + 1; i++)
             {
@@ -142,6 +142,23 @@ namespace GameLife
             }
             return terrain;
         }
+
+        //public virtual void MakeTurnDead()
+        //{
+        //    //подсчёт соседей
+        //    int[,] aliveNeighCount = new int[N + 2, N + 2];
+        //    AliveNeighCount(ref aliveNeighCount);
+
+        //    //шаг игры
+        //    for (int i = 1; i < N + 1; i++)
+        //    {
+        //        for (int j = 1; j < N + 1; j++)
+        //        {
+        //            field[i, j].MakeTurnDead(aliveNeighCount[i, j]);
+        //        }
+        //    }
+        //}
+
     }
 
 }
