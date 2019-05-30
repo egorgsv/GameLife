@@ -17,33 +17,29 @@ namespace GameLife
         //ссылки на соседей
         public Cell[] cellNeigh = new Cell[8];
 
-        ////координаты
-        //public int x;
-        //public int y;
-        
+        //координаты
+        public int x;
+        public int y;
+
         //конструктор
-        public Cell(/*int x, int y,*/ CellSlate slate = CellSlate.Dead) 
+        public Cell(int x = 0, int y = 0, CellSlate slate = CellSlate.Dead) 
         {
-            //this.x = x;
-            //this.y = y;
+            this.x = x;
+            this.y = y;
             Slate = slate;
+        }
+
+        public Cell(Cell[] cellNeigh, int x = 0, int y = 0, CellSlate Slate = CellSlate.Dead)
+        {
+            this.cellNeigh = cellNeigh;
+            this.x = x;
+            this.y = y;
+            this.Slate = Slate;
         }
 
 
         //делаем шаг
-        public void MakeTurn(int aliveNeighCount)
-        {
-
-            if (Slate == CellSlate.Dead && aliveNeighCount == 3)
-            {
-                Slate = CellSlate.Alive;
-            }
-
-            if (Slate == CellSlate.Alive && (aliveNeighCount > 3 || aliveNeighCount < 2))
-            {
-                Slate = CellSlate.Dead;
-            }
-        }
+        public virtual void MakeTurn(int aliveNeighCount) { }
 
         //подсчёт количества живых соседей
         public int AliveNeighCount()
@@ -52,7 +48,7 @@ namespace GameLife
 
             foreach (var neigh in cellNeigh)
             {
-                if (/*neigh != null &&*/ neigh.Slate == CellSlate.Alive)
+                if (neigh.Slate == CellSlate.Alive)
                 {
                     aliveNeighCount++;
                 }
@@ -61,7 +57,7 @@ namespace GameLife
             return aliveNeighCount;
         }
 
-        public object Clone()
+        public virtual object Clone()
         {
             Cell cell = new Cell();
             cell.cellNeigh = new Cell[cellNeigh.Length];
@@ -78,7 +74,7 @@ namespace GameLife
             return cell;
         }
 
-        public bool Equals(Cell cell)
+        public bool EqualsNeigh(Cell cell)
         {
             if (AliveNeighCount() != cell.AliveNeighCount()) return false;
             for (int i = 0; i < 8; i++)
@@ -91,13 +87,13 @@ namespace GameLife
             return true;
         }
 
-        //public void MakeTurnDead(int aliveNeighCount)
-        //{
-        //    if (Slate == CellSlate.Alive && (aliveNeighCount > 3 || aliveNeighCount < 2))
-        //    {
-        //        Slate = CellSlate.Dead;
-        //    }
-        //}
+        public void MakeTurnDead(int aliveNeighCount)
+        {
+            if (Slate == CellSlate.Alive && (aliveNeighCount > 3 || aliveNeighCount < 2))
+            {
+                Slate = CellSlate.Dead;
+            }
+        }
     }
 
 }

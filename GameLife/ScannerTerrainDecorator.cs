@@ -19,23 +19,32 @@ namespace GameLife
             field = terrain.field;
         }
 
-        Terrain terrainPrev = new Terrain();
-        Terrain newterrain = new Terrain();
+        Terrain terrainPrev;
+        Terrain newterrain;
+
         public override void MakeTurn()
         {
-            terrainPrev.Start();
-            newterrain.Start();
-            terrainPrev = (Terrain) terrain.Clone();
-
-            terrain.MakeTurn();
-
+            terrainPrev = new Terrain();
+            newterrain = new Terrain();
+            //terrainPrev = (Terrain) terrain.Clone();
             for (int i = 1; i < N + 1; i++)
             {
                 for (int j = 1; j < N + 1; j++)
                 {
-                    if (terrainPrev.field[i, j].Slate == Cell.CellSlate.Alive &&
-                        terrainPrev.field[i, j].Equals(terrain.field[i, j])
-                        //terrain.field[i, j].AliveNeighCount() == terrainPrev.field[i, j].AliveNeighCount() 
+                    terrainPrev.field[i, j].Slate = terrain.field[i, j].Slate;
+                }
+            }
+
+            terrain.MakeTurn();
+            terrain.MakeTurn();
+
+            ////////
+            for (int i = 1; i < N + 1; i++)
+            {
+                for (int j = 1; j < N + 1; j++)
+                {
+                    if (terrain.field[i, j].Slate == Cell.CellSlate.Alive &&
+                        terrain.field[i, j].EqualsNeigh(terrainPrev.field[i, j])
                         && terrainPrev.field[i, j].Slate == terrain.field[i, j].Slate)
                     {
                         newterrain.field[i, j].Slate = Cell.CellSlate.Alive;
@@ -46,6 +55,51 @@ namespace GameLife
                     }
                 }
             }
+
+            for (int k = 0; k < 6; k++)
+            {
+                newterrain.MakeTurnDead();
+            }
+
+            for (int i = 1; i < N + 1; i++)
+            {
+                for (int j = 1; j < N + 1; j++)
+                {
+                    //newterrain.field[i, j] = (BlackCell)newterrain.field[i, j];
+                    newterrain.field[i, j] = new BlackCell(i, j, newterrain.field[i, j].Slate);
+                    newterrain.CellNeigh();
+                }
+            }
+
+            for (int i = 1; i < N + 1; i++)
+            {
+                for (int j = 1; j < N + 1; j++)
+                {
+                    //terrain.field[i, j] = (BlackCell)newterrain.field[i, j].Clone();
+
+                    terrain.field[i, j] = new BlackCell(i, j, newterrain.field[i, j].Slate);
+                    terrain.CellNeigh();
+                }
+            }
+
+
+            /////////
+            //for (int i = 1; i < N + 1; i++)
+            //{
+            //    for (int j = 1; j < N + 1; j++)
+            //    {
+            //        if (terrainPrev.field[i, j].Slate == Cell.CellSlate.Alive &&
+            //            terrain.field[i, j].AliveNeighCount() == terrainPrev.field[i, j].AliveNeighCount()
+            //            && terrainPrev.field[i, j].Slate == terrain.field[i, j].Slate)
+            //        {
+            //            newterrain.field[i, j].Slate = Cell.CellSlate.Alive;
+            //        }
+            //        else
+            //        {
+            //            newterrain.field[i, j].Slate = Cell.CellSlate.Dead;
+            //        }
+            //    }
+            //}
 
             //for (int i = 1; i < N + 1; i++)
             //{
@@ -69,20 +123,7 @@ namespace GameLife
             //    }
             //}
 
-            newterrain.MakeTurn();
-            //newterrain.MakeTurnDead();
-
-            for (int i = 1; i < N + 1; i++)
-            {
-                for (int j = 1; j < N + 1; j++)
-                {
-                    if (newterrain.field[i, j].Slate == Cell.CellSlate.Alive && 
-                        (newterrain.field[i, j].AliveNeighCount() < 2 || newterrain.field[i, j].AliveNeighCount() > 3))
-                    {
-                        newterrain.field[i, j].Slate = Cell.CellSlate.Dead;
-                    }
-                }
-            }
+            //newterrain.MakeTurn();
         }
 
         public override Image Draw(Image image)
@@ -94,78 +135,5 @@ namespace GameLife
         {
             terrain.Start();
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /*
-        public void Scanner(Cell.CellSlate[,] PrevField)
-        {
-            Terrain terrainScan = new Terrain();
-            terrainScan.Start();
-
-            for (int i = 1; i < Terrain.N + 1; i++)
-            {
-                for (int j = 1; j < Terrain.N + 1; j++)
-                {
-                    terrainScan.field[i, j].Slate = PrevField[i, j];
-                }
-            }
-
-            for (int i = 1; i < Terrain.N + 1; i++)
-            {
-                for (int j = 1; j < Terrain.N + 1; j++)
-                {
-                    if (terrainScan.field[i, j].Slate == terrain.field[i, j].Slate && terrain.field[i, j].Slate == Cell.CellSlate.Alive)
-                    {
-                        int count = 0;
-                        for (int f = 0; f < 8; f++)
-                        {
-                            if (terrainScan.field[i, j].cellNeigh[f].Slate == terrain.field[i, j].cellNeigh[f].Slate)
-                            {
-                                count++;
-                            }
-                        }
-
-                        if (count == 8) { terrainScan.field[i, j].Slate = Cell.CellSlate.Alive; }
-                        else { terrainScan.field[i, j].Slate = Cell.CellSlate.Dead; }
-                    }
-
-                }
-            }
-
-            pictureBox2.Image = bmpScan;
-        }
-        */
     }
 }

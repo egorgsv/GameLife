@@ -16,15 +16,17 @@ namespace GameLife
     {
         public bool stopped = false; //АСТАНАВИТЕСЬ!!!!!
         public bool drawGrid = false; //рисовать ли сетку
-        TerrainDecorator terrain = new StatisticsTerrainDecorator(new Terrain());
-        TerrainDecorator terrainScan = new ScannerTerrainDecorator(new Terrain());
+        TerrainDecorator terrain;
+        TerrainDecorator terrainScan;
 
         public Form1()
         {
             InitializeComponent();
             timer1.Interval = 300; //интервал таймера в мс
             timer1.Enabled = false;
-            //terrain = new ScannerTerrainDecorator(terrain); //декоратор сканера
+            terrain = new StatisticsTerrainDecorator(new Terrain());
+            terrain = new ScannerTerrainDecorator(terrain); //декоратор сканера
+            terrainScan = new ScannerTerrainDecorator(new Terrain());
         }
 
         //ПОЕХАЛИ!
@@ -53,7 +55,14 @@ namespace GameLife
             //АСТАНАВИТЕСЬ!!!!!
             if (!stopped) 
             {
-                terrainScan.CopyFrom(terrain);
+                //terrainScan.CopyFrom(terrain);
+                for (int i = 1; i < Terrain.N + 1; i++)
+                {
+                    for (int j = 1; j < Terrain.N + 1; j++)
+                    {
+                        terrainScan.field[i, j].Slate = terrain.field[i, j].Slate;
+                    }
+                }
                 terrain.MakeTurn();
                 pictureBox1.Image = terrain.Draw(bmp);
 
@@ -77,8 +86,8 @@ namespace GameLife
         {
             drawGrid = !drawGrid;
             if (drawGrid)
-            {
-                terrain = new FramedCellsTerrainDecorator(terrain); //декоратор сетки
+            {   //декоратор сетки
+                terrain = new FramedCellsTerrainDecorator(terrain); 
                 terrainScan = new FramedCellsTerrainDecorator(terrainScan);
             }
             else

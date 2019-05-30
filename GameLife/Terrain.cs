@@ -23,24 +23,20 @@ namespace GameLife
             {
                 for (int j = 0; j < N + 2; j++)
                 {
-                    field[i, j] = new Cell();
+                    field[i, j] = new WhiteCell(i, j);
                 }
             }
+
+            CellNeigh();
         }
 
-        //начало игры
-        public virtual void Start()
+        public void CellNeigh()
         {
-            Random random = new Random();
+            //передаются ссылки на соседей
             for (int i = 1; i < N + 1; i++)
             {
                 for (int j = 1; j < N + 1; j++)
                 {
-                    //рандомно выбираем состояние клетки 
-                    int randomNumber = random.Next(0, 99);
-
-                    field[i, j].Slate = randomNumber % 7 == 0 ? Cell.CellSlate.Alive : Cell.CellSlate.Dead;
-
                     Cell[] cellNeigh = new Cell[8]; //массив соседей
 
                     int f = 0;
@@ -57,6 +53,21 @@ namespace GameLife
                     }
 
                     field[i, j].cellNeigh = cellNeigh;
+                }
+            }
+        }
+
+        //начало игры
+        public virtual void Start()
+        {
+            Random random = new Random();
+            for (int i = 1; i < N + 1; i++)
+            {
+                for (int j = 1; j < N + 1; j++)
+                {
+                    //рандомно выбираем состояние клетки 
+                    int randomNumber = random.Next(0, 99);
+                    field[i, j].Slate = randomNumber % 2 == 0 ? Cell.CellSlate.Alive : Cell.CellSlate.Dead;
                 }
             }
         }
@@ -115,6 +126,7 @@ namespace GameLife
             float diam = image.Height / N;
             // Create solid brush.
             SolidBrush orangeBrush = new SolidBrush(Color.DarkOrange);
+            SolidBrush blackBrush = new SolidBrush(Color.Black);
             Graphics g = Graphics.FromImage(image);
 
             for (int i = 1; i < N + 1; i++)
@@ -123,7 +135,14 @@ namespace GameLife
                 {
                     if (field[i, j].Slate == Cell.CellSlate.Alive)
                     {
-                        g.FillEllipse(orangeBrush, (i + 0.1f - 1) * diam, (j + 0.1f - 1) * diam, diam * 0.8f, diam * 0.8f);
+                        if (field[i, j] is WhiteCell)
+                        {
+                            g.FillEllipse(orangeBrush, (i + 0.1f - 1) * diam, (j + 0.1f - 1) * diam, diam * 0.8f, diam * 0.8f);
+                        }
+                        if (field[i, j] is BlackCell)
+                        {
+                            g.FillEllipse(blackBrush, (i + 0.1f - 1) * diam, (j + 0.1f - 1) * diam, diam * 0.8f, diam * 0.8f);
+                        }
                     }
                 }
             }
@@ -143,21 +162,21 @@ namespace GameLife
             return terrain;
         }
 
-        //public virtual void MakeTurnDead()
-        //{
-        //    //подсчёт соседей
-        //    int[,] aliveNeighCount = new int[N + 2, N + 2];
-        //    AliveNeighCount(ref aliveNeighCount);
+        public virtual void MakeTurnDead()
+        {
+            //подсчёт соседей
+            int[,] aliveNeighCount = new int[N + 2, N + 2];
+            AliveNeighCount(ref aliveNeighCount);
 
-        //    //шаг игры
-        //    for (int i = 1; i < N + 1; i++)
-        //    {
-        //        for (int j = 1; j < N + 1; j++)
-        //        {
-        //            field[i, j].MakeTurnDead(aliveNeighCount[i, j]);
-        //        }
-        //    }
-        //}
+            //шаг игры
+            for (int i = 1; i < N + 1; i++)
+            {
+                for (int j = 1; j < N + 1; j++)
+                {
+                    field[i, j].MakeTurnDead(aliveNeighCount[i, j]);
+                }
+            }
+        }
 
     }
 
