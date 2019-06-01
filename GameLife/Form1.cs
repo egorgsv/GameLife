@@ -16,17 +16,15 @@ namespace GameLife
     {
         public bool stopped = false; //АСТАНАВИТЕСЬ!!!!!
         public bool drawGrid = false; //рисовать ли сетку
-        TerrainDecorator terrain;
-        TerrainDecorator terrainScan;
+        TerrainDecorator terrain = new StatisticsTerrainDecorator(new Terrain());
+        TerrainDecorator terrainScan = new ScannerTerrainDecorator1(new Terrain());
 
         public Form1()
         {
             InitializeComponent();
-            timer1.Interval = 300; //интервал таймера в мс
+            timer1.Interval = 1000; //интервал таймера в мс
             timer1.Enabled = false;
-            terrain = new StatisticsTerrainDecorator(new Terrain());
             terrain = new ScannerTerrainDecorator(terrain); //декоратор сканера
-            terrainScan = new ScannerTerrainDecorator(new Terrain());
         }
 
         //ПОЕХАЛИ!
@@ -109,7 +107,6 @@ namespace GameLife
 
         private void Stat_Click(object sender, EventArgs e)
         {
-
         }
     }
 }

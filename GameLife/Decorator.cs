@@ -16,7 +16,7 @@ namespace GameLife
             {
                 for (int j = 1; j < N + 1; j++)
                 {
-                    terrain.field[i, j] = (Cell) t.field[i, j].Clone();
+                    terrain.field[i, j] = (Cell)t.field[i, j].Clone();
                 }
             }
         }

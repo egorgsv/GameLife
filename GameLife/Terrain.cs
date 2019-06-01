@@ -23,7 +23,7 @@ namespace GameLife
             {
                 for (int j = 0; j < N + 2; j++)
                 {
-                    field[i, j] = new WhiteCell(i, j);
+                    field[i, j] = new Cell(i, j);
                 }
             }
 
@@ -135,11 +135,11 @@ namespace GameLife
                 {
                     if (field[i, j].Slate == Cell.CellSlate.Alive)
                     {
-                        if (field[i, j] is WhiteCell)
+                        if (field[i, j].color == Cell.Color.White)
                         {
                             g.FillEllipse(orangeBrush, (i + 0.1f - 1) * diam, (j + 0.1f - 1) * diam, diam * 0.8f, diam * 0.8f);
                         }
-                        if (field[i, j] is BlackCell)
+                        if (field[i, j].color == Cell.Color.Black)
                         {
                             g.FillEllipse(blackBrush, (i + 0.1f - 1) * diam, (j + 0.1f - 1) * diam, diam * 0.8f, diam * 0.8f);
                         }

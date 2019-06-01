@@ -59,6 +59,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScannerTerrainDecorator.cs" />
+    <Compile Include="ScannerTerrainDecorator1.cs" />
     <Compile Include="StatisticsTerrainDecorator.cs" />
     <Compile Include="Terrain.cs" />
     <Compile Include="WhiteCell.cs" />
