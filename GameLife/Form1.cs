@@ -22,7 +22,7 @@ namespace GameLife
         public Form1()
         {
             InitializeComponent();
-            timer1.Interval = 1000; //интервал таймера в мс
+            timer1.Interval = 300; //интервал таймера в мс
             timer1.Enabled = false;
             terrain = new ScannerTerrainDecorator(terrain); //декоратор сканера
         }
@@ -59,6 +59,8 @@ namespace GameLife
                     for (int j = 1; j < Terrain.N + 1; j++)
                     {
                         terrainScan.field[i, j].Slate = terrain.field[i, j].Slate;
+                        terrainScan.field[i, j].direction = terrain.field[i, j].direction;
+                        terrainScan.field[i, j].color = terrain.field[i, j].color;
                     }
                 }
                 terrain.MakeTurn();

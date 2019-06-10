@@ -18,6 +18,12 @@ namespace GameLife
 
         public Color color;
 
+        public enum Direction { Up, Down, Left, Right, Null}
+
+        public Direction direction;
+
+        public bool pause;
+
         //ссылки на соседей
         public Cell[] cellNeigh = new Cell[8];
 
@@ -26,21 +32,23 @@ namespace GameLife
         public int y;
 
         //конструктор
-        public Cell(int x = 0, int y = 0, CellSlate slate = CellSlate.Dead, Color color = Color.White) 
+        public Cell(int x = 0, int y = 0, CellSlate slate = CellSlate.Dead, Color color = Color.White, Direction direction = Direction.Null) 
         {
             this.x = x;
             this.y = y;
             Slate = slate;
             this.color = color;
+            this.direction = direction;
         }
 
-        public Cell(Cell[] cellNeigh, int x = 0, int y = 0, CellSlate Slate = CellSlate.Dead, Color color = Color.White)
+        public Cell(Cell[] cellNeigh, int x = 0, int y = 0, CellSlate Slate = CellSlate.Dead, Color color = Color.White, Direction direction = Direction.Null)
         {
             this.cellNeigh = cellNeigh;
             this.x = x;
             this.y = y;
             this.Slate = Slate;
             this.color = color;
+            this.direction = direction;
         }
 
 
@@ -66,6 +74,98 @@ namespace GameLife
             {
                 Slate = CellSlate.Dead;
             }
+
+            ChooseDirection();
+        }
+
+        public void ChooseDirection()
+        {
+            if (this.color == Color.Black)
+            {
+                foreach (var neigh in cellNeigh)
+                {
+                    if (neigh.color == Color.Black)
+                    {
+                        if (neigh.direction != Direction.Null)
+                        {
+                            this.direction = neigh.direction;
+                        }
+                    }
+                }
+
+                if (this.direction != Direction.Null)
+                {
+                    foreach (var neigh in cellNeigh)
+                    {
+                        if (neigh.color == Color.Black)
+                        {
+                            neigh.direction = this.direction;
+                        }
+                    }
+                }
+                else
+                {
+                    Random random = new Random();
+                    //рандомно выбираем направление
+                    int randomNumber = random.Next(0, 99)%4;
+                    switch (randomNumber)
+                    {
+                        case 1:
+                            direction = Direction.Up;
+                            break;
+                        case 2:
+                            direction = Direction.Down;
+                            break;
+                        case 3:
+                            direction = Direction.Right;
+                            break;
+                        case 0:
+                            direction = Direction.Down;
+                            break;
+                    }
+
+                }
+            }
+            else
+            {
+                direction = Direction.Null;
+            }
+        }
+
+        public void ChooseNewDirection()
+        {
+            if (this.color == Color.Black)
+            {
+                Random random = new Random();
+                //рандомно выбираем направление
+                int randomNumber = random.Next(0, 99) % 4;
+                switch (randomNumber)
+                {
+                    case 1:
+                        direction = Direction.Up;
+                        break;
+                    case 2:
+                        direction = Direction.Down;
+                        break;
+                    case 3:
+                        direction = Direction.Right;
+                        break;
+                    case 0:
+                        direction = Direction.Down;
+                        break;
+                }
+
+
+                foreach (var neigh in cellNeigh)
+                {
+                    if (neigh.color == Color.Black)
+                    {
+                        neigh.direction = this.direction;
+                    }
+                }
+            }
+
+                
         }
 
         public int AliveBlackCount() //число живых чёрных соседей
@@ -97,6 +197,7 @@ namespace GameLife
 
             return aliveWhiteCount;
         }
+
         //подсчёт количества живых соседей
         public int AliveNeighCount()
         {
@@ -112,6 +213,7 @@ namespace GameLife
 
             return aliveNeighCount;
         }
+        
 
         public virtual object Clone()
         {
@@ -124,11 +226,12 @@ namespace GameLife
                     cell.cellNeigh[i] = new Cell();
                     cell.cellNeigh[i].Slate = cellNeigh[i].Slate;
                     cell.cellNeigh[i].color = cellNeigh[i].color;
+                    cell.cellNeigh[i].direction = cellNeigh[i].direction;
                 }
-                
             }
             cell.Slate = Slate;
             cell.color = color;
+            cell.direction = direction;
             return cell;
         }
 
@@ -152,6 +255,10 @@ namespace GameLife
                 Slate = CellSlate.Dead;
             }
         }
-    }
 
+        public void Pause()
+        {
+
+        }
+    }
 }

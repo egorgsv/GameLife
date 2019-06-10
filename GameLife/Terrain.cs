@@ -12,7 +12,7 @@ namespace GameLife
     //а потом снабжает каждую из них соседями), рисует каждую Cell. 
     public class Terrain : ICloneable//поле
     {
-        public static int N = 30;
+        public static int N = 40;
 
         public Cell[,] field = new Cell[N + 2, N + 2];
 
@@ -67,7 +67,7 @@ namespace GameLife
                 {
                     //рандомно выбираем состояние клетки 
                     int randomNumber = random.Next(0, 99);
-                    field[i, j].Slate = randomNumber % 2 == 0 ? Cell.CellSlate.Alive : Cell.CellSlate.Dead;
+                    field[i, j].Slate = randomNumber % 5 == 0 ? Cell.CellSlate.Alive : Cell.CellSlate.Dead;
                 }
             }
         }

@@ -32,6 +32,7 @@ namespace GameLife
                 {
                     terrainPrev.field[i, j].Slate = terrain.field[i, j].Slate;
                     terrainPrev.field[i, j].color = terrain.field[i, j].color;
+                    terrainPrev.field[i, j].direction = terrain.field[i, j].direction;
                 }
             }
 
@@ -73,47 +74,120 @@ namespace GameLife
                 }
             }
 
-            /////////
-            //for (int i = 1; i < N + 1; i++)
-            //{
-            //    for (int j = 1; j < N + 1; j++)
-            //    {
-            //        if (terrainPrev.field[i, j].Slate == Cell.CellSlate.Alive &&
-            //            terrain.field[i, j].AliveNeighCount() == terrainPrev.field[i, j].AliveNeighCount()
-            //            && terrainPrev.field[i, j].Slate == terrain.field[i, j].Slate)
-            //        {
-            //            newterrain.field[i, j].Slate = Cell.CellSlate.Alive;
-            //        }
-            //        else
-            //        {
-            //            newterrain.field[i, j].Slate = Cell.CellSlate.Dead;
-            //        }
-            //    }
-            //}
+            for (int i = 1; i < N + 1; i++)
+            {
+                for (int j = 1; j < N + 1; j++)
+                {
+                    terrain.field[i, j].ChooseDirection();
+
+                }
+            }
+
+            for (int i = 1; i < N + 1; i++)
+            {
+                for (int j = 1; j < N + 1; j++)
+                {
+                    if (terrain.field[i, j].color == Cell.Color.Black && (i == 1 || i == N || j == 1 || j == N) && terrain.field[i, j].Slate == Cell.CellSlate.Alive)
+                    {
+                        terrain.field[i, j].ChooseNewDirection();
+                    }
+                }
+            }
+
+            for (int i = 1; i < N + 1; i++)
+            {
+                for (int j = 1; j < N + 1; j++)
+                {
+                    terrain.field[i, j].ChooseDirection();
+
+                }
+            }
+
+
+            TerrainDecorator CopyTerrain = new StatisticsTerrainDecorator(new Terrain());
+            CopyTerrain.CopyFrom(terrain);
+            for (int i = 1; i < N + 1; i++)
+            {
+                for (int j = 1; j < N + 1; j++)
+                {
+                    if (CopyTerrain.field[i, j].Slate == Cell.CellSlate.Alive && CopyTerrain.field[i, j].color == Cell.Color.Black)
+                    {
+                        terrain.field[i, j].color = Cell.Color.White;
+                        terrain.field[i, j].direction = Cell.Direction.Null;
+                        terrain.field[i, j].Slate = Cell.CellSlate.Dead;
+                    }
+                }
+            }
+
+            for (int i = 1; i < N + 1; i++)
+            {
+                for (int j = 1; j < N + 1; j++)
+                {
+                    if (CopyTerrain.field[i, j].Slate == Cell.CellSlate.Alive && CopyTerrain.field[i, j].color == Cell.Color.Black)
+                    {
+                        switch (CopyTerrain.field[i, j].direction)
+                        {
+                            case Cell.Direction.Up:
+                                terrain.field[i - 1, j].color = Cell.Color.Black;
+                                terrain.field[i - 1, j].direction = Cell.Direction.Up;
+                                terrain.field[i - 1, j].Slate = Cell.CellSlate.Alive;
+
+                                break;
+                            case Cell.Direction.Down:
+                                terrain.field[i + 1, j].color = Cell.Color.Black;
+                                terrain.field[i + 1, j].direction = Cell.Direction.Down;
+                                terrain.field[i + 1, j].Slate = Cell.CellSlate.Alive;
+
+                                break;
+                            case Cell.Direction.Right:
+                                terrain.field[i, j + 1].color = Cell.Color.Black;
+                                terrain.field[i, j + 1].direction = Cell.Direction.Right;
+                                terrain.field[i, j + 1].Slate = Cell.CellSlate.Alive;
+
+                                break;
+                            case Cell.Direction.Left:
+                                terrain.field[i, j - 1].color = Cell.Color.Black;
+                                terrain.field[i, j - 1].direction = Cell.Direction.Left;
+                                terrain.field[i, j - 1].Slate = Cell.CellSlate.Alive;
+
+                                break;
+                        }
+                    }
+                }
+            }
+
+            for (int i = 1; i < N + 1; i++)
+            {
+                for (int j = 1; j < N + 1; j++)
+                {
+                    terrain.field[i, j].ChooseDirection();
+                }
+            }
+
+            for (int i = 0; i < N + 2; i++)
+            {
+                for (int j = 0; j < N + 2; j++)
+                {
+                    if (i == 0 || i == N + 1 || j == 0 || j == N + 1)
+                    {
+                        terrain.field[i, j].Slate = Cell.CellSlate.Dead;
+                    }
+                }
+            }
+
 
             //for (int i = 1; i < N + 1; i++)
             //{
             //    for (int j = 1; j < N + 1; j++)
             //    {
-            //        if (newterrain.field[i, j].Slate == Cell.CellSlate.Alive && terrain.field[i, j].AliveNeighCount() == 2)
+            //        if (terrain.field[i, j].color == Cell.Color.Black && (i == 1 || i == N || j == 1 || j == N) && terrain.field[i, j].pause == false)
             //        {
-            //            int f = 0;
-            //            for (int k = i - 1; k < i + 2; k++)
-            //            {
-            //                for (int l = j - 1; l < j + 2; l++)
-            //                {
-            //                    if (k != i || l != j)
-            //                    {
-            //                        newterrain.field[k, l].Slate = terrainPrev.field[i, j].cellNeigh[f].Slate;
-            //                        f++;
-            //                    }
-            //                }
-            //            }
+            //            terrain.field[i, j].pause = true;
+
             //        }
             //    }
             //}
 
-            //newterrain.MakeTurn();
         }
 
         public override Image Draw(Image image)

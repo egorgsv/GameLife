@@ -72,6 +72,74 @@ namespace GameLife
 
                 }
             }
+
+            for (int i = 1; i < N + 1; i++)
+            {
+                for (int j = 1; j < N + 1; j++)
+                {
+                    terrain.field[i, j].ChooseDirection();
+
+                }
+            }
+
+            
+
+            TerrainDecorator CopyTerrain = new StatisticsTerrainDecorator(new Terrain());
+            CopyTerrain.CopyFrom(terrain);
+
+            for (int i = 1; i < N + 1; i++)
+            {
+                for (int j = 1; j < N + 1; j++)
+                {
+                    if (CopyTerrain.field[i, j].Slate == Cell.CellSlate.Alive && CopyTerrain.field[i, j].color == Cell.Color.Black)
+                    {
+                        newterrain.field[i, j].color = Cell.Color.White;
+                        newterrain.field[i, j].direction = Cell.Direction.Null;
+                        newterrain.field[i, j].Slate = Cell.CellSlate.Dead;
+                    }
+                }
+            }
+
+            for (int i = 1; i < N + 1; i++)
+            {
+                for (int j = 1; j < N + 1; j++)
+                {
+                    if (CopyTerrain.field[i, j].Slate == Cell.CellSlate.Alive && CopyTerrain.field[i, j].color == Cell.Color.Black)
+                    {
+                        switch (CopyTerrain.field[i, j].direction)
+                        {
+                            case Cell.Direction.Up:
+                                newterrain.field[i - 1, j].color = Cell.Color.Black;
+                                newterrain.field[i - 1, j].direction = Cell.Direction.Up;
+                                newterrain.field[i - 1, j].Slate = Cell.CellSlate.Alive;
+                                
+                                break;
+                            case Cell.Direction.Down:
+                                newterrain.field[i + 1, j].color = Cell.Color.Black;
+                                newterrain.field[i + 1, j].direction = Cell.Direction.Down;
+                                newterrain.field[i + 1, j].Slate = Cell.CellSlate.Alive;
+                                
+                                break;
+                            case Cell.Direction.Right:
+                                newterrain.field[i, j + 1].color = Cell.Color.Black;
+                                newterrain.field[i, j + 1].direction = Cell.Direction.Right;
+                                newterrain.field[i, j + 1].Slate = Cell.CellSlate.Alive;
+                               
+                                break;
+                            case Cell.Direction.Left:
+                                newterrain.field[i, j - 1].color = Cell.Color.Black;
+                                newterrain.field[i, j - 1].direction = Cell.Direction.Left;
+                                newterrain.field[i, j - 1].Slate = Cell.CellSlate.Alive;
+                                
+                                break;
+                        }
+                    }
+                }
+            }
+
+            
+
+
         }
 
         public override Image Draw(Image image)
