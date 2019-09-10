@@ -12,9 +12,11 @@ namespace GameLife
     //а потом снабжает каждую из них соседями), рисует каждую Cell. 
     public class Terrain : ICloneable//поле
     {
-        public static int N = 40;
+        public static int N = 30;
 
         public Cell[,] field = new Cell[N + 2, N + 2];
+
+        
 
         public Terrain() //конструктор
         {
@@ -61,6 +63,7 @@ namespace GameLife
         public virtual void Start()
         {
             Random random = new Random();
+
             for (int i = 1; i < N + 1; i++)
             {
                 for (int j = 1; j < N + 1; j++)

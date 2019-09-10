@@ -65,7 +65,6 @@ namespace GameLife
                 }
                 terrain.MakeTurn();
                 pictureBox1.Image = terrain.Draw(bmp);
-
                 
                 terrainScan.MakeTurn();
                 pictureBox2.Image = terrainScan.Draw(bmpScan);

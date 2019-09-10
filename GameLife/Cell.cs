@@ -18,11 +18,9 @@ namespace GameLife
 
         public Color color;
 
-        public enum Direction { Up, Down, Left, Right, Null}
+        public enum Direction { Up, Down, Left, Right, Null }
 
         public Direction direction;
-
-        public bool pause;
 
         //ссылки на соседей
         public Cell[] cellNeigh = new Cell[8];
@@ -75,98 +73,100 @@ namespace GameLife
                 Slate = CellSlate.Dead;
             }
 
-            ChooseDirection();
+            //ChooseDirection();
         }
 
-        public void ChooseDirection()
-        {
-            if (this.color == Color.Black)
-            {
-                foreach (var neigh in cellNeigh)
-                {
-                    if (neigh.color == Color.Black)
-                    {
-                        if (neigh.direction != Direction.Null)
-                        {
-                            this.direction = neigh.direction;
-                        }
-                    }
-                }
 
-                if (this.direction != Direction.Null)
-                {
-                    foreach (var neigh in cellNeigh)
-                    {
-                        if (neigh.color == Color.Black)
-                        {
-                            neigh.direction = this.direction;
-                        }
-                    }
-                }
-                else
-                {
-                    Random random = new Random();
-                    //рандомно выбираем направление
-                    int randomNumber = random.Next(0, 99)%4;
-                    switch (randomNumber)
-                    {
-                        case 1:
-                            direction = Direction.Up;
-                            break;
-                        case 2:
-                            direction = Direction.Down;
-                            break;
-                        case 3:
-                            direction = Direction.Right;
-                            break;
-                        case 0:
-                            direction = Direction.Down;
-                            break;
-                    }
-
-                }
-            }
-            else
-            {
-                direction = Direction.Null;
-            }
-        }
-
-        public void ChooseNewDirection()
-        {
-            if (this.color == Color.Black)
-            {
-                Random random = new Random();
-                //рандомно выбираем направление
-                int randomNumber = random.Next(0, 99) % 4;
-                switch (randomNumber)
-                {
-                    case 1:
-                        direction = Direction.Up;
-                        break;
-                    case 2:
-                        direction = Direction.Down;
-                        break;
-                    case 3:
-                        direction = Direction.Right;
-                        break;
-                    case 0:
-                        direction = Direction.Down;
-                        break;
-                }
-
-
-                foreach (var neigh in cellNeigh)
-                {
-                    if (neigh.color == Color.Black)
-                    {
-                        neigh.direction = this.direction;
-                    }
-                }
-            }
 
                 
-        }
+                //public void ChooseDirection()
+        //{
+        //    if (this.color == Color.Black)
+        //    {
+        //        foreach (var neigh in cellNeigh)
+        //        {
+        //            if (neigh.color == Color.Black)
+        //            {
+        //                if (neigh.direction != Direction.Null)
+        //                {
+        //                    this.direction = neigh.direction;
+        //                }
+        //            }
+        //        }
+
+        //        if (this.direction != Direction.Null)
+        //        {
+        //            foreach (var neigh in cellNeigh)
+        //            {
+        //                if (neigh.color == Color.Black && neigh.Slate == CellSlate.Alive)
+        //                {
+        //                    neigh.direction = this.direction;
+        //                    //neigh.ChooseDirection();
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            Random random = new Random();
+        //            //рандомно выбираем направление
+        //            int randomNumber = random.Next(0, 3);
+        //            switch (randomNumber)
+        //            {
+        //                case 1:
+        //                    direction = Direction.Up;
+        //                    break;
+        //                case 2:
+        //                    direction = Direction.Down;
+        //                    break;
+        //                case 3:
+        //                    direction = Direction.Right;
+        //                    break;
+        //                case 0:
+        //                    direction = Direction.Left;
+        //                    break;
+        //            }
+
+        //        }
+        //    }
+        //    else
+        //    {
+        //        direction = Direction.Null;
+        //    }
+        //}
+
+        //public void ChooseNewDirection()
+        //{
+        //    if (this.color == Color.Black)
+        //    {
+        //        Random random = new Random();
+        //        //рандомно выбираем направление
+        //        int randomNumber = random.Next(0, 3);
+        //        switch (randomNumber)
+        //        {
+        //            case 1:
+        //                direction = Direction.Up;
+        //                break;
+        //            case 2:
+        //                direction = Direction.Down;
+        //                break;
+        //            case 3:
+        //                direction = Direction.Right;
+        //                break;
+        //            case 0:
+        //                direction = Direction.Left;
+        //                break;
+        //        }
+
+
+        //        foreach (var neigh in cellNeigh)
+        //        {
+        //            if (neigh.color == Color.Black && neigh.Slate == CellSlate.Alive)
+        //            {
+        //                neigh.direction = this.direction;
+        //                //neigh.ChooseDirection();
+        //            }
+        //        }
+        //    }}
 
         public int AliveBlackCount() //число живых чёрных соседей
         {
@@ -254,11 +254,6 @@ namespace GameLife
             {
                 Slate = CellSlate.Dead;
             }
-        }
-
-        public void Pause()
-        {
-
         }
     }
 }

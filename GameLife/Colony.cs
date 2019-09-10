@@ -8,7 +8,7 @@ namespace GameLife
 {
     class Colony
     {
-        List<BlackCell> colony = new List<BlackCell>();
+        public List<Cell> cellList = new List<Cell>();
 
         public enum Direction { Up, Down, Left, Right, Null }
 
@@ -21,25 +21,41 @@ namespace GameLife
 
         public void ChooseDirection()
         {
-            if (direction != null)
+            if (direction != Colony.Direction.Null)
             {
-                foreach (var cell in colony)
+                foreach (var cell in cellList)
                 {
-                    cell.direction = (Cell.Direction) direction;
+                    switch (direction)
+                    {
+                        case Direction.Down:
+                            cell.direction = Cell.Direction.Down;
+                            break;
+                        case Direction.Up:
+                            cell.direction = Cell.Direction.Up;
+                            break;
+                        case Direction.Right:
+                            cell.direction = Cell.Direction.Right;
+                            break;
+                        case Direction.Left:
+                            cell.direction = Cell.Direction.Left;
+                            break;
+                        default:
+                            direction = Direction.Null;
+                            break;
+                    }
                 }
             }
             else
             {
                 ChooseNewDirection();
             }
-
         }
 
         public void ChooseNewDirection()
         {
             Random random = new Random();
             //рандомно выбираем направление
-            int randomNumber = random.Next(0, 99) % 4;
+            int randomNumber = random.Next(0, 3);
             switch (randomNumber)
             {
                 case 1:
@@ -52,9 +68,65 @@ namespace GameLife
                     direction = Direction.Right;
                     break;
                 case 0:
-                    direction = Direction.Down;
+                    direction = Direction.Left;
+                    break;
+                default:
+                    direction = Direction.Null;
                     break;
             }    
+        }
+
+        public void IsBorder()
+        {
+            foreach (Cell cell in cellList)
+            {
+                if(cell.x == Terrain.N - 1 || cell.y == Terrain.N - 1 || cell.x == 2 || cell.y == 2)
+                {
+                    switch (direction)
+                    {
+                        case Direction.Down:
+                            direction = Direction.Up;
+                            break;
+                        case Direction.Up:
+                            direction = Direction.Down;
+                            break;
+                        case Direction.Left:
+                            direction = Direction.Right;
+                            break;
+                        case Direction.Right:
+                            direction = Direction.Left;
+                            break;
+                        default:
+                            direction = Direction.Null;
+                            break;
+                    }
+                }
+            }
+        }
+
+        public Cell.Direction GetDirection(Cell cell)
+        {
+            ChooseDirection();
+            foreach (var thiscell in cellList)
+            {
+                if (cell.x == thiscell.x && cell.y == thiscell.y)
+                {
+                    return thiscell.direction;
+                }
+            }
+            return Cell.Direction.Null;
+        }
+
+        public bool InColony(Cell cell)
+        {
+            foreach (var thiscell in cellList)
+            {
+                if (cell.x == thiscell.x && cell.y == thiscell.y)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

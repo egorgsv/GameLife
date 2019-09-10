@@ -22,6 +22,18 @@ namespace GameLife
         Terrain terrainPrev;
         Terrain newterrain;
 
+        List<Colony> colonies = new List<Colony>();
+
+        public bool inColonies(Cell cell)
+        {
+            foreach (var colony in colonies)
+            {
+                if (colony.cellList.Contains(cell)) return true;
+            }
+
+            return false;
+        }
+
         public override void MakeTurn()
         {
             terrainPrev = new Terrain();
@@ -74,35 +86,99 @@ namespace GameLife
                 }
             }
 
-            for (int i = 1; i < N + 1; i++)
+            void newColony(ref Cell cell, ref Colony colony)
             {
-                for (int j = 1; j < N + 1; j++)
+                if (!inColonies(cell) && cell.x != N && cell.y != N)
                 {
-                    terrain.field[i, j].ChooseDirection();
-
-                }
-            }
-
-            for (int i = 1; i < N + 1; i++)
-            {
-                for (int j = 1; j < N + 1; j++)
-                {
-                    if (terrain.field[i, j].color == Cell.Color.Black && (i == 1 || i == N || j == 1 || j == N) && terrain.field[i, j].Slate == Cell.CellSlate.Alive)
+                    colony.cellList.Add(cell);
+                    if (terrain.field[cell.x + 1, cell.y].color == Cell.Color.Black && 
+                        terrain.field[cell.x + 1, cell.y].Slate == Cell.CellSlate.Alive)
                     {
-                        terrain.field[i, j].ChooseNewDirection();
+                        newColony(ref terrain.field[cell.x + 1, cell.y], ref colony);
+                    }
+                    if (terrain.field[cell.x, cell.y + 1].color == Cell.Color.Black &&
+                        terrain.field[cell.x, cell.y + 1].Slate == Cell.CellSlate.Alive)
+                    {
+                        newColony(ref terrain.field[cell.x, cell.y + 1], ref colony);
+                    }
+                    if (terrain.field[cell.x + 1, cell.y + 1].color == Cell.Color.Black &&
+                        terrain.field[cell.x + 1, cell.y + 1].Slate == Cell.CellSlate.Alive)
+                    {
+                        newColony(ref terrain.field[cell.x + 1, cell.y + 1], ref colony);
                     }
                 }
             }
 
+            for (int i = 1; i < N; i++)
+            {
+                for (int j = 1; j < N; j++)
+                {
+                    if (terrain.field[i, j].color == Cell.Color.Black && terrain.field[i, j].Slate == Cell.CellSlate.Alive && !inColonies(terrain.field[i, j]))
+                    {
+                        Colony colony = new Colony();
+                        colonies.Add(colony);
+                        newColony(ref terrain.field[i, j], ref colony);
+                        colony.ChooseDirection();
+                        colony.IsBorder();
+                    }
+                }
+            }
+
+            foreach (Colony colony in colonies)
+            {
+                colony.IsBorder();
+                colony.ChooseDirection();
+            }
+
+            
+            Joining();
+
+            for (int i = 0; i < N + 2; i++)
+            {
+                for (int j = 0; j < N + 2; j++)
+                {
+                    if (i == 0 || i == N + 1 || j == 0 || j == N + 1)
+                    {
+                        terrain.field[i, j].color = Cell.Color.White;
+                        terrain.field[i, j].direction = Cell.Direction.Null;
+                        terrain.field[i, j].Slate = Cell.CellSlate.Dead;
+                    }
+                }
+            }
+
+            //for (int i = 1; i < N + 1; i++)
+            //{
+            //    for (int j = 1; j < N + 1; j++)
+            //    {
+            //        if (terrain.field[i, j].color == Cell.Color.Black && (i == 1 || i == N || j == 1 || j == N) && terrain.field[i, j].Slate == Cell.CellSlate.Alive)
+            //        {
+            //            terrain.field[i, j].ChooseNewDirection();
+            //        }
+            //    }
+            //}
+
+            //for (int i = 1; i < N + 1; i++)
+            //{
+            //    for (int j = 1; j < N + 1; j++)
+            //    {
+            //        terrain.field[i, j].ChooseDirection();
+
+            //    }
+            //}
+
             for (int i = 1; i < N + 1; i++)
             {
                 for (int j = 1; j < N + 1; j++)
                 {
-                    terrain.field[i, j].ChooseDirection();
+                    if (inColonies(terrain.field[i, j]))
+                    {
+                        terrain.field[i, j].color = Cell.Color.Black;
+                        terrain.field[i, j].direction = GetDirection(terrain.field[i, j]);
+                        terrain.field[i, j].Slate = Cell.CellSlate.Alive;
 
+                    }
                 }
             }
-
 
             TerrainDecorator CopyTerrain = new StatisticsTerrainDecorator(new Terrain());
             CopyTerrain.CopyFrom(terrain);
@@ -115,8 +191,63 @@ namespace GameLife
                         terrain.field[i, j].color = Cell.Color.White;
                         terrain.field[i, j].direction = Cell.Direction.Null;
                         terrain.field[i, j].Slate = Cell.CellSlate.Dead;
+                        RemoveFromColony(terrain.field[i, j]);
                     }
                 }
+            }
+            
+
+            void RemoveFromColony(Cell cell)
+            {
+                foreach (Colony colony in colonies)
+                {
+                    colony.cellList.Remove(cell);
+                }
+                
+            }
+
+            void Joining()
+            {
+
+                List<Colony> newcolonies = new List<Colony>();
+                foreach (Colony colony in colonies)
+                {
+                    
+                    Colony newcolony = new Colony();
+                    foreach (Cell cell in colony.cellList)
+                    {
+                        newcolony.cellList.Add(cell);
+                        foreach (Cell neigh in cell.cellNeigh)
+                        {
+                            if (neigh != null)
+                            { 
+                                if (neigh.color == Cell.Color.Black && neigh.Slate == Cell.CellSlate.Alive && !colony.cellList.Contains(neigh))
+                                {
+                                    newcolony.cellList.Add(neigh);
+                                }
+                            }
+                        }
+                    }
+                    newcolony.ChooseNewDirection();
+                    newcolony.IsBorder();
+                    newcolonies.Add(newcolony);
+                    
+                }
+                colonies = newcolonies;
+            }
+
+            
+
+            Cell.Direction GetDirection(Cell cell)
+            {
+                foreach (Colony colony in colonies)
+                {
+                    if (colony.GetDirection(cell) != Cell.Direction.Null)
+                    {
+                        return colony.GetDirection(cell);
+                    }
+                }
+                return Cell.Direction.Null;
             }
 
             for (int i = 1; i < N + 1; i++)
@@ -128,65 +259,40 @@ namespace GameLife
                         switch (CopyTerrain.field[i, j].direction)
                         {
                             case Cell.Direction.Up:
-                                terrain.field[i - 1, j].color = Cell.Color.Black;
-                                terrain.field[i - 1, j].direction = Cell.Direction.Up;
-                                terrain.field[i - 1, j].Slate = Cell.CellSlate.Alive;
+                                terrain.field[i, j - 1].color = Cell.Color.Black;
+                                terrain.field[i, j - 1].direction = Cell.Direction.Up;
+                                terrain.field[i, j - 1].Slate = Cell.CellSlate.Alive;
 
                                 break;
                             case Cell.Direction.Down:
-                                terrain.field[i + 1, j].color = Cell.Color.Black;
-                                terrain.field[i + 1, j].direction = Cell.Direction.Down;
-                                terrain.field[i + 1, j].Slate = Cell.CellSlate.Alive;
-
-                                break;
-                            case Cell.Direction.Right:
                                 terrain.field[i, j + 1].color = Cell.Color.Black;
-                                terrain.field[i, j + 1].direction = Cell.Direction.Right;
+                                terrain.field[i, j + 1].direction = Cell.Direction.Down;
                                 terrain.field[i, j + 1].Slate = Cell.CellSlate.Alive;
 
                                 break;
+                            case Cell.Direction.Right:
+                                terrain.field[i + 1, j].color = Cell.Color.Black;
+                                terrain.field[i + 1, j].direction = Cell.Direction.Right;
+                                terrain.field[i + 1, j].Slate = Cell.CellSlate.Alive;
+
+                                break;
                             case Cell.Direction.Left:
-                                terrain.field[i, j - 1].color = Cell.Color.Black;
-                                terrain.field[i, j - 1].direction = Cell.Direction.Left;
-                                terrain.field[i, j - 1].Slate = Cell.CellSlate.Alive;
+                                terrain.field[i - 1, j].color = Cell.Color.Black;
+                                terrain.field[i - 1, j].direction = Cell.Direction.Left;
+                                terrain.field[i - 1, j].Slate = Cell.CellSlate.Alive;
 
                                 break;
                         }
                     }
                 }
-            }
 
-            for (int i = 1; i < N + 1; i++)
-            {
-                for (int j = 1; j < N + 1; j++)
-                {
-                    terrain.field[i, j].ChooseDirection();
-                }
-            }
-
-            for (int i = 0; i < N + 2; i++)
-            {
-                for (int j = 0; j < N + 2; j++)
-                {
-                    if (i == 0 || i == N + 1 || j == 0 || j == N + 1)
-                    {
-                        terrain.field[i, j].Slate = Cell.CellSlate.Dead;
-                    }
-                }
             }
 
 
-            //for (int i = 1; i < N + 1; i++)
-            //{
-            //    for (int j = 1; j < N + 1; j++)
-            //    {
-            //        if (terrain.field[i, j].color == Cell.Color.Black && (i == 1 || i == N || j == 1 || j == N) && terrain.field[i, j].pause == false)
-            //        {
-            //            terrain.field[i, j].pause = true;
 
-            //        }
-            //    }
-            //}
+
+
+            //colonies.Clear();  
 
         }
 
